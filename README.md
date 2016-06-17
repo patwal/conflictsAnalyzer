@@ -18,22 +18,22 @@ to the instructions described below:
 
 1- clone and build gitminer
 
-    git clone https://github.com/prga/gitminer.git
+    git clone https://github.com/patwal/gitminer.git
     cd gitminer
     mvn clean compile package assembly:single
     cd ..
 
 2- clone GremlinQuery and switch to right branch
 
-    git clone https://github.com/prga/GremlinQuery.git
+    git clone https://github.com/patwal/GremlinQuery.git
 
 3-clone featurehouse (ssmerge) 
 
-    git clone https://github.com/prga/featurehouse.git
+    git clone https://github.com/patwal/featurehouse.git
 
 4- clone conflictsanalyzer
 
-    git clone https://github.com/prga/conflictsAnalyzer.git
+    git clone https://github.com/patwal/conflictsAnalyzer.git
 
 After cloning these 4 projects (gitminer, GremlinQuery, featurehouse, and conflictsAnalyzer), you need to import 3 projects
 inside Eclipse IDE
