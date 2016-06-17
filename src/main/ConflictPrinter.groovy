@@ -2,26 +2,25 @@ package main
 
 
 import java.util.ArrayList;
-import modification.traversalLanguageParser.addressManagement.DuplicateFreeLinkedList
 
 public class ConflictPrinter {
 
-	static String conflictReportHeader 
-	
+	static String conflictReportHeader
+
 	public static setconflictReportHeader(){
 		this.conflictReportHeader = ''
 		String noPattern = SSMergeConflicts.NOPATTERN.toString()
 		for(SSMergeConflicts c : SSMergeConflicts.values()){
 			String type = c.toString()
 			this.conflictReportHeader = this.conflictReportHeader +
-			type + ', '
+					type + ', '
 			if(!type.equals(noPattern)){
 				this.conflictReportHeader = this.conflictReportHeader +
-				type + 'DS, ' + type + 'CL, ' +
-				type + 'IFP, '
+						type + 'DS, ' + type + 'CL, ' +
+						type + 'IFP, '
 			}
 		}
-		
+
 		for(PatternSameSignatureCM p : PatternSameSignatureCM.values()){
 			String cause = p.toString()
 			String diffSpacing = cause + 'DS'
@@ -29,7 +28,7 @@ public class ConflictPrinter {
 		}
 		this.conflictReportHeader = this.conflictReportHeader + 'PossibleRenamings'
 	}
-	
+
 	public static String getConflictReportHeader(){
 		return this.conflictReportHeader
 	}
@@ -37,32 +36,30 @@ public class ConflictPrinter {
 	public static void printProjectData(Project p){
 		String fileName = 'projectsPatternData.csv'
 		def out = new File(fileName)
-		
-		if(!out.exists()){
-		String row = 'Project, Merge_Scenarios, Conflicting_Scenarios, ' +
-		this.conflictReportHeader + '\n'
 
-		out.append(row)
+		if(!out.exists()){
+			String row = 'Project, Merge_Scenarios, Conflicting_Scenarios, ' +
+					this.conflictReportHeader + '\n'
+
+			out.append(row)
 		}
 
-			out.append(p.toString() + '\n')
-
+		out.append(p.toString() + '\n')
 	}
-	
+
 	public static void updateProjectData(Project p){
 		String fileName = "ResultData" + File.separator + p.getName() + File.separator + 'ProjectReport.csv'
 		def out = new File(fileName)
-		
+
 		out.delete()
 		out = new File(fileName)
-		
-		
+
+
 		String row = 'Project, Merge_Scenarios, Conflicting_Scenarios, ' +
-		this.conflictReportHeader + '\n'
+				this.conflictReportHeader + '\n'
 
 		out.append(row)
 		out.append(p.toString() + '\n')
-
 	}
 	public static void printMergeScenarioReport(MergeScenario mergeScenario, String projectName){
 
@@ -71,25 +68,17 @@ public class ConflictPrinter {
 
 		if(!out.exists()){
 			String fileHeader = 'Merge_scenario, Total_Files, Files_Edited_By_One_Dev, ' +
-					'Files_That_Remained_The_Same, Files_Added_By_Ove_Dev, Files_Merged, ' + 
+					'Files_That_Remained_The_Same, Files_Added_By_Ove_Dev, Files_Merged, ' +
 					'Files_With_Conflicts, ' +
-					 this.conflictReportHeader + '\n'
+					this.conflictReportHeader + '\n'
 			out.append(fileHeader)
 		}
 		out.append(mergeScenario.toString() + '\n')
-		printBadParsedNodes(mergeScenario, projectName)
+
 		printMergeScenarioMetrics(mergeScenario, projectName)
 		printConflictsReport(mergeScenario, projectName)
 	}
-	
-	public static void printBadParsedNodes(MergeScenario mergeScenario, String projectName){
-		File out = new File("ResultData" + File.separator + projectName + File.separator + 
-			'Merge_Scenarios' + File.separator + mergeScenario.name + '_BadParsedFiles.csv')
-		DuplicateFreeLinkedList<File> parsedErrors = mergeScenario.fstGenMerge.parsedErrors
-		for(File f : parsedErrors){
-			out.append(f.getAbsolutePath() + '\n')
-		}
-	}
+
 	public static void printMergeScenarioMetrics(MergeScenario mergeScenario, String projectName){
 		File out = new File('ResultData' + File.separator + projectName + File.separator +
 				'Merge_Scenarios' + File.separator + mergeScenario.name + '.csv')
@@ -102,8 +91,6 @@ public class ConflictPrinter {
 		}
 
 		out.append(mergeScenario.printMetrics() + '\n')
-
-
 	}
 
 	public static void printConflictsReport(MergeScenario mergeScenario, String projectName){
@@ -119,23 +106,30 @@ public class ConflictPrinter {
 		for(MergedFile mergedFile: mergeScenario.getMergedFiles()){
 
 			for(Conflict c: mergedFile.getConflicts()){
-
-				def row = ['Conflict type: '+ c.getType() + '\n' + 
-					'Number of Conflicts: ' + c.getNumberOfConflicts() + '\n' +
-					'Different Spacing: ' + c.getDifferentSpacing() + '\n'  +
-					'Consecutive Lines: ' + c.getConsecutiveLines() + '\n'+ 
-					'Intersection: ' + c.getFalsePositivesIntersection() + '\n' +
-					'Cause same signature: ' + c.getCauseSameSignatureCM() + '\n' +
-					'Possible renaming: ' + c.getPossibleRenaming() + '\n' +
-					'Conflict body: ' + '\n' + c.getBody() ]
-				out.append row.join(',')
-				out.append '\n'
-				row = ['File path: ' + c.getFilePath()]
-				out.append row.join(',')
-				out.append '\n'
-
+				if(!c.getType().equals("NOPATTERN") && (c.getBody().contains(Conflict.SSMERGE_SEPARATOR) || c.getBody().contains(Conflict.DIFF3MERGE_SEPARATOR))) {
+					def row = [
+						'############## CONFLICT ##############\n' +
+						'Conflict type: '+ c.getType() + '\n' +
+						'Merge Commit SHA-1: ' + c.getChildSHA() + '\n' +
+						'Parent1 SHA-1: ' + c.getParent1SHA() + '\n' +
+						'Parent2 SHA-1: ' + c.getParent2SHA() + '\n' +
+						'Number of Conflicts: ' + c.getNumberOfConflicts() + '\n' +
+						'Different Spacing: ' + c.getDifferentSpacing() + '\n'  +
+						'Consecutive Lines: ' + c.getConsecutiveLines() + '\n'+
+						'Intersection: ' + c.getFalsePositivesIntersection() + '\n' +
+						'Cause same signature: ' + c.getCauseSameSignatureCM() + '\n' +
+						'Possible renaming: ' + c.getPossibleRenaming() + '\n' +
+						'Conflict body: ' + '\n' + c.getBody()
+					]
+					out.append row.join(',')
+					out.append '\n'
+					row = [
+						'File path: ' + c.getFilePath()
+					]
+					out.append row.join(',')
+					out.append '\n'
+				}
 			}
-
 		}
 		out.append '\n'
 		out.append(delimiter)

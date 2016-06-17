@@ -13,7 +13,6 @@ import main.MergeCommit
 import main.SSMergeNode
 import merger.FSTGenMerger;
 import merger.MergeVisitor
-import modification.traversalLanguageParser.addressManagement.DuplicateFreeLinkedList
 import util.CompareFiles;
 
 class EvoScenario implements Observer{
@@ -87,8 +86,7 @@ class EvoScenario implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		if(o instanceof MergeVisitor && arg instanceof FSTTerminal){
-			if(!arg.getType().contains("-Content") && this.isConflictableNode(arg.getType()) 
-				&& !this.isABadParsedNode(arg)){
+			if(!arg.getType().contains("-Content") && this.isConflictableNode(arg.getType())){
 				if(arg.getBody().contains(FSTGenMerger.MERGE_SEPARATOR)){
 					this.computeChanges(arg)
 				}else{
@@ -97,35 +95,6 @@ class EvoScenario implements Observer{
 				
 			}
 			
-		}
-	}
-	
-	private boolean isABadParsedNode(FSTTerminal node){
-		boolean isABadParsedNode = false
-		DuplicateFreeLinkedList<File> parsedErrors = this.fstGenMerge.parsedErrors
-		for(File f : parsedErrors){
-			String classname = this.getClassName(node)
-			String fileName = f.name
-			if(fileName.contains(classname) || classname.equals('')){
-				isABadParsedNode = true
-			}
-		}
-
-		return isABadParsedNode
-	}
-	
-	private String getClassName(FSTNode node){
-		String name = ''
-		if(node!=null){
-			String type = node.getType()
-			if(type.equals('ClassDeclaration')){
-				name = node.getName()
-				return name
-			}else{
-				this.getClassName(node.getParent())
-			}
-		}else{
-			return name
 		}
 	}
 	
@@ -311,7 +280,7 @@ class EvoScenario implements Observer{
 		mc.parent1 = '448259185594ed4f0b9ea2c6be9197ca3f5573db'
 		mc.parent2 = 'c0c6d0e7b0f175b800925472be4c550e5a39567d'*/
 		ExtractorResult er = new ExtractorResult()
-		er.revisionFile = '/Users/paolaaccioly/Desktop/Teste/jdimeTests/rev_935c8-none.revisions'
+		er.revisionFile = '/Users/paolaaccioly/Documents/Doutorado/workspace_fse/downloads/TGM/revisions/rev_a2ac7/rev_935c8-none.revisions'
 		//er.revisionFile = '/Users/paolaaccioly/Documents/Doutorado/workspace_fse/downloads/TGM/revisions/rev_3ba28/rev_44825-c0c6d.revisions'
 		EvoScenario evo = new EvoScenario(mc, er)
 		evo.analyseChanges()

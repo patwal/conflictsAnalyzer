@@ -7,7 +7,6 @@ import java.util.Observable;
 
 import merger.FSTGenMerger;
 import merger.MergeVisitor
-import modification.traversalLanguageParser.addressManagement.DuplicateFreeLinkedList
 import sun.tools.jar.Main;
 import util.CompareFiles;
 import composer.rules.ImplementsListMerging
@@ -152,42 +151,12 @@ class MergeScenario implements Observer {
 			}
 		}
 	}
-	
-	private boolean isABadParsedNode(FSTTerminal node){
-		boolean isABadParsedNode = false
-		DuplicateFreeLinkedList<File> parsedErrors = this.fstGenMerge.parsedErrors
-		for(File f : parsedErrors){
-			String classname = this.getClassName(node)
-			String fileName = f.name
-			if(fileName.contains(classname) || classname.equals('')){
-				isABadParsedNode = true
-			}
-		}
 
-		return isABadParsedNode
-	}
-	
-	private String getClassName(FSTNode node){
-		String name = ''
-		if(node!=null){
-			String type = node.getType()
-			if(type.equals('ClassDeclaration')){
-				name = node.getName()
-				return name
-			}else{
-				this.getClassName(node.getParent())
-			}
-		}else{
-			return name
-		}
-	}
-	
 	public void createConflict(FSTTerminal node){
-		if(!this.isABadParsedNode(node)){
-			Conflict conflict = new Conflict(node, extractResult.revisionFile);
-			this.matchConflictWithFile(conflict)
-			this.updateMergeScenarioSummary(conflict)
-		}
+		Conflict conflict = new Conflict(node, extractResult.revisionFile, extractResult.getSHAFamily());
+		this.matchConflictWithFile(conflict)
+		this.updateMergeScenarioSummary(conflict)
+
 	}
 	
 	private void updateSameSignatureCMSummary(String cause, int ds){
@@ -287,11 +256,9 @@ class MergeScenario implements Observer {
 
 	public static void main(String[] args){
 		ExtractorResult er = new ExtractorResult()
-		er.revisionFile = '/Users/paolaaccioly/Desktop/Teste/jdimeTests/rev.revisions'
+		er.revisionFile = '/Users/paolaaccioly/Documents/Doutorado/workspace_fse/downloads/TGM/revisions/rev_3ba28/rev_44825-c0c6d.revisions'
 		MergeScenario ms = new MergeScenario(er)
 		ms.analyzeConflicts()
-		ConflictPrinter.printBadParsedNodes(ms, 'TGM')
-		println 'hello'
 		/*Map <String,Conflict> mergeScenarioSummary = new HashMap<String, Conflict>()
 		 String type = SSMergeConflicts.EditSameMC.toString()
 		 mergeScenarioSummary.put(type, new Conflict(type))

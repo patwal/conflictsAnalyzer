@@ -34,25 +34,13 @@ class NormalizedProject {
 
 	public void computeNumberOfChanges(String projectRepo, String gitMinerDir, String downloadDir){
 		//get commits list
-		ArrayList<MergeCommit> temp = this.runGremLinQuery(projectRepo, gitMinerDir)
-		ArrayList<MergeCommit> commits = this.filterMergeCommits(temp)
+		ArrayList<MergeCommit> commits = this.runGremLinQuery(projectRepo, gitMinerDir)
 
 		//create extractor
 		Extractor extractor = this.createExtractor(this.name, projectRepo, downloadDir)
 
 		//analyse commit scenarios
 		this.analyseEvoScenarios(commits, extractor)
-	}
-	
-	public ArrayList<MergeCommit> filterMergeCommits(ArrayList<MergeCommit> mergeCommits){
-		ArrayList<MergeCommit> commits = new ArrayList<MergeCommit>()
-		for(MergeCommit mc : mergeCommits){
-			if(mc.parent2.equals('')){
-				commits.add(mc)
-			}
-		}
-		
-		return commits
 	}
 
 	public void analyseEvoScenarios(ArrayList<MergeCommit> commits, Extractor extractor ){
@@ -84,8 +72,7 @@ class NormalizedProject {
 			this.analyseChanges(scenario, er)
 		}
 	}
-	
-	
+
 	public void analyseChanges (MergeCommit mc, ExtractorResult er){
 		EvoScenario scenario = new EvoScenario(mc, er)
 		scenario.analyseChanges()

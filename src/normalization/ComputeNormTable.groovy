@@ -140,7 +140,6 @@ class ComputeNormTable {
 	private void computeNormTable(){
 		this.normalizedData = new HashMap<String, Map<String, Integer>>()
 		for(String project in this.changes.keySet()){
-			println project
 			Map<String, Integer> normData = this.processProjectNormalization(this.changes.get(project), this.conflicts.get(project))
 			this.normalizedData.put(project, normData)
 		}

@@ -38,13 +38,9 @@ class NormalizationStudy {
 	
 	public static void main (String[] args){
 		NormalizationStudy normalization = new NormalizationStudy()
-		/*parameters:
-		 * - list of projects to analyze
-		 * - RunStudy results folder
-		 * - gitminer folder
-		 * - downloads folder*/
+		
 		normalization.normalizeData('projectsList', 'ResultData', 
-			'/Users/paolaaccioly/Documents/Doutorado/workspace_empirical/gitminer', 
-			'/Users/paolaaccioly/Documents/Doutorado/workspace_empirical/downloads')
+			'/media/ines/b9d638e1-93ee-435a-af41-80d544917e00/gitClones/workspace_ca/gitminer', 
+			'/media/ines/b9d638e1-93ee-435a-af41-80d544917e00/gitClones/workspace_fse/downloads')
 	} 
 }
