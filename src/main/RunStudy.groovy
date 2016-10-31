@@ -1,9 +1,10 @@
 package main
 import java.util.Hashtable
 
-import getConflictCommits.PaolaMergeConflicter;
+//import getConflictCommits.PaolaMergeConflicter;
 import util.CSVAnalyzer
 import util.CurrentProject;;
+import util.MergeConflicter
 
 /*this class is supposed to integrate all the 3 steps involved to run the study
  * gitminer/gremlinQuery/ConflictsAnalyzer
@@ -46,8 +47,8 @@ class RunStudy {
 			
 			/******************** HÄR **********************/
 			String repoPath = this.downloadPath + "/temp/" + this.projectName + "/git"
-			PaolaMergeConflicter pmc = new PaolaMergeConflicter()
-			ArrayList<MergeCommit> listMergeCommits = pmc.doMerge(repoPath)
+			MergeConflicter mc = new MergeConflicter()
+			ArrayList<MergeCommit> listMergeCommits = mc.doMerge(repoPath)
 			/***********************************************/
 			
 			
